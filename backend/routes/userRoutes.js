@@ -37,6 +37,25 @@ router.put('/preferences', authMiddleware, async (req, res) => {
     }
 });
 
+// Fetch all articles based on categories to display in the home page
+router.get('/homeArticles', authMiddleware, async (req, res) => {
+    try {
+        const { categories } = req.query; // Get categories from query parameters
+        const categoriesArray = categories ? categories.split(',') : []; // Convert comma-separated string to array
+
+        // Find articles that match the categories
+        const articles = await Article.find({
+            categories: { $in: categoriesArray }
+        });
+
+        res.status(200).json({ articles });
+    } catch (error) {
+        console.error('Failed to fetch articles:', error);
+        res.status(500).json({ error: 'Failed to fetch articles' });
+    }
+});
+
+
 // Get User's Articles
 router.get('/articles', authMiddleware, async (req, res) => {
     try {
