@@ -4,7 +4,10 @@ import express from 'express';
 import mongoose from 'mongoose';
 import { config } from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
+<<<<<<< HEAD
 import userRoutes from './routes/userRoutes.js';
+=======
+>>>>>>> 7f70ece4e79e89c4cbd316e5ddc5ac15bfa76b62
 import cors from 'cors';
 
 config();
@@ -17,7 +20,10 @@ app.use(cors());
 
 // Routes
 app.use('/auth', authRoutes);
+<<<<<<< HEAD
 app.use('/user', userRoutes);
+=======
+>>>>>>> 7f70ece4e79e89c4cbd316e5ddc5ac15bfa76b62
 
 // Sample route
 app.get('/', (req, res) => {
