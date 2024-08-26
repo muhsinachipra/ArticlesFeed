@@ -4,8 +4,9 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 const authMiddleware = async (req, res, next) => {
+    console.log("Inside AuthMiddleware")
     const token = req.header('Authorization')?.replace('Bearer ', '');
-    console.log("token in authMiddleware: ", token)
+    // console.log("token in authMiddleware: ", token)
 
     if (!token) {
         return res.status(401).json({ error: 'Access denied' });
@@ -13,9 +14,10 @@ const authMiddleware = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Decoded: ", decoded)
+        // console.log("Decoded: ", decoded)
         const user = await User.findById(decoded.userId);  // Fetch full user object
-        console.log("User: ", user)
+        // console.log("User: ", user)
+        console.log("Inside AuthMiddleware User: ", user.firstName)
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });

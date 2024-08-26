@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // import SettingsPage from './pages/SettingsPage';
 // import ArticlePage from './pages/ArticlePage';
@@ -12,14 +13,16 @@ import DashboardPage from './pages/DashboardPage';
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        {/* <Route path="/settings" element={<SettingsPage />} /> */}
-        {/* <Route path="/article/:id" element={<ArticlePage />} /> */}
-      </Routes>
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          {/* <Route path="/settings" element={<SettingsPage />} /> */}
+          {/* <Route path="/article/:id" element={<ArticlePage />} /> */}
+        </Routes>
+      </ErrorBoundary>
     </Router>
   );
 }
