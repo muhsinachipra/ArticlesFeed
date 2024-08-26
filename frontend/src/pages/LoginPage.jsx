@@ -1,8 +1,9 @@
 // frontend\src\pages\LoginPage.jsx
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Import Link for navigation
 import axios from 'axios';
+import { useAuth } from '../context/useAuth';
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const LoginPage = () => {
 
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,13 +24,9 @@ const LoginPage = () => {
         e.preventDefault();
 
         try {
-            console.log("formData", formData)
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, formData);
             const { token } = response.data;
-
-            // Store token in local storage or state (you might want to use context or redux)
-            localStorage.setItem('token', token);
-
+            login(token);
             navigate('/dashboard'); // Redirect to dashboard or another page
         } catch (err) {
             if (err.response && err.response.data && err.response.data.error) {
@@ -70,6 +68,15 @@ const LoginPage = () => {
                         Login
                     </button>
                 </form>
+                <div className="text-center mt-4">
+                    <p className="text-gray-700">Dont have an account?</p>
+                    <Link
+                        to="/register"
+                        className="text-blue-600 hover:underline"
+                    >
+                        Register here
+                    </Link>
+                </div>
             </div>
         </div>
     );

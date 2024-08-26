@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const DashboardPage = () => {
     const [preferences, setPreferences] = useState([]);
@@ -140,6 +141,12 @@ const DashboardPage = () => {
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
             <div className="w-full max-w-md p-8 space-y-4 bg-white rounded shadow">
                 <h2 className="text-2xl font-bold text-center text-blue-600">Dashboard</h2>
+                <Link
+                to="/"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+                Go to Home
+            </Link>
                 {error && <p className="text-red-500">{error}</p>}
                 <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">Your Article Preferences:</label>

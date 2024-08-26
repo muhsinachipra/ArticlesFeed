@@ -1,29 +1,29 @@
 // frontend\src\App.jsx
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ErrorBoundary from './components/ErrorBoundary';
-
-// import SettingsPage from './pages/SettingsPage';
-// import ArticlePage from './pages/ArticlePage';
+import PrivateRoute from './components/PrivateRoute';
+import PublicRoute from './components/PublicRoute';
 
 function App() {
   return (
-    <Router>
-      <ErrorBoundary>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          {/* <Route path="/settings" element={<SettingsPage />} /> */}
-          {/* <Route path="/article/:id" element={<ArticlePage />} /> */}
-        </Routes>
-      </ErrorBoundary>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+            <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+            <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+            <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+          </Routes>
+        </ErrorBoundary>
+      </Router>
+    </AuthProvider>
   );
 }
 
