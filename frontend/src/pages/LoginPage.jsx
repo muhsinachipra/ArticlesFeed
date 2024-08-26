@@ -22,10 +22,7 @@ const LoginPage = () => {
         e.preventDefault();
 
         try {
-<<<<<<< HEAD
-            console.log("formData",formData)
-=======
->>>>>>> 7f70ece4e79e89c4cbd316e5ddc5ac15bfa76b62
+            console.log("formData", formData)
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, formData);
             const { token } = response.data;
 
