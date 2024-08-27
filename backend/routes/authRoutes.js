@@ -49,7 +49,7 @@ router.post('/register', async (req, res) => {
 // Login Route
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    console.log("req.body:",req.body)
+    console.log("req.body:", req.body)
     console.log("email: ", email, "password: ", password)
 
     // Check if user exists
@@ -65,7 +65,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
     res.status(200).json({ token });
 });
