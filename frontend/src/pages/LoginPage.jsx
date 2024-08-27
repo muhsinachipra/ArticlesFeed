@@ -27,7 +27,7 @@ const LoginPage = () => {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, formData);
             const { token } = response.data;
             login(token);
-            navigate('/dashboard'); // Redirect to dashboard or another page
+            navigate('/'); // Redirect to dashboard or another page
         } catch (err) {
             if (err.response && err.response.data && err.response.data.error) {
                 setError(err.response.data.error); // Extract and set the error message from the response
