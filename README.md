@@ -1,7 +1,3 @@
-Here's a sample `README.md` file for your project:
-
----
-
 # Article Feeds Web Application
 
 ## Overview
@@ -139,7 +135,3 @@ If you'd like to contribute, please fork the repository and use a feature branch
 ## License
 
 This project is open-source and available under the MIT License.
-
----
-
-This `README.md` provides a comprehensive guide for setting up, deploying, and testing your Article Feeds Web Application. Adjust the details as per your actual project setup and configurations.
