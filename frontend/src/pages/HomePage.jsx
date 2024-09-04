@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // Import useNavigate for redirection
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 
 export default function HomePage() {
     const [articles, setArticles] = useState([]);
+    const [filteredArticles, setFilteredArticles] = useState([]); // For storing filtered results
+    const [searchTerm, setSearchTerm] = useState(''); // For tracking search input
     const [error, setError] = useState('');
     const token = localStorage.getItem('token');
     const { logout } = useAuth();
@@ -14,7 +16,6 @@ export default function HomePage() {
     useEffect(() => {
         const fetchArticles = async () => {
             try {
-                // Fetch user preferences
                 const preferencesResponse = await axios.get(`${import.meta.env.VITE_API_URL}/user/preferences`, {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -22,21 +23,17 @@ export default function HomePage() {
                 });
                 const preferences = preferencesResponse.data.preferences;
 
-                console.log("preferences: ", preferences);
-
-                // Fetch articles based on preferences
                 const articlesResponse = await axios.get(`${import.meta.env.VITE_API_URL}/user/homeArticles`, {
                     params: {
-                        categories: preferences.join(',') // Assuming the backend can filter articles based on categories
+                        categories: preferences.join(',')
                     },
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
 
-                console.log("articlesResponse.data.articles: ", articlesResponse.data.articles);
-
                 setArticles(articlesResponse.data.articles);
+                setFilteredArticles(articlesResponse.data.articles); // Set initial filtered articles
             } catch (err) {
                 console.error('Failed to fetch articles:', err);
                 setError('Failed to load articles');
@@ -46,44 +43,54 @@ export default function HomePage() {
         fetchArticles();
     }, [token]);
 
-
-    // const handleLogout = () => {
-    //     logout();  // Call the logout function to clear the token
-    //     navigate('/login'); // Redirect to the login page
-    // };
+    useEffect(() => {
+        const results = articles.filter(article =>
+            article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            article.content.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredArticles(results);
+    }, [searchTerm, articles]);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-            <div className="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg relative">
-                <div className="absolute top-8 right-4 space-x-4">
-                    <Link to="/dashboard" className="inline-block px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow hover:bg-blue-700 transition duration-200 ease-in-out">
+        <div className="flex flex-col min-h-screen bg-gray-100">
+            <div className="w-full bg-white shadow p-4 flex justify-between items-center">
+                <h1 className="pl-4 text-3xl font-bold text-blue-600">Article Feeds</h1>
+                <div className="space-x-4">
+                    <Link to="/dashboard" className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700 transition duration-200 text-center inline-block">
                         Dashboard
                     </Link>
-                    <button onClick={logout} className="inline-block px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg shadow hover:bg-red-700 transition duration-200 ease-in-out">
+                    <button onClick={logout} className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-700 transition duration-200 text-center">
                         Logout
                     </button>
                 </div>
-                <h1 className="text-3xl font-bold text-blue-600 mb-6">Article Feeds</h1>
+            </div>
+
+            <div className="flex-1 container mx-auto p-6">
+                <input
+                    type="text"
+                    placeholder="Search articles..."
+                    className="w-full mb-6 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+
                 {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-                <div className="w-full">
-                    {articles.length === 0 ? (
-                        <p className="text-gray-500 text-center">No articles found based on your interests.</p>
-                    ) : (
-                        <ul className="space-y-6">
-                            {articles.map((article) => (
-                                <li key={article._id} className="p-6 bg-blue-50 hover:bg-blue-100 transition duration-200 ease-in-out rounded-lg shadow-md">
-                                    <h2 className="text-2xl font-semibold text-blue-700">{article.title}</h2>
-                                    <p className="text-gray-700 mt-3 leading-relaxed">{article.content}</p>
-                                    <div className="mt-4">
-                                        <span className="text-sm text-gray-500">Categories: {article.categories.join(', ')}</span>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
+                {filteredArticles.length === 0 ? (
+                    <p className="text-gray-500 text-center">No articles found.</p>
+                ) : (
+                    <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {filteredArticles.map((article) => (
+                            <li key={article._id} className="p-6 bg-blue-50 hover:bg-blue-100 transition duration-200 ease-in-out rounded-lg shadow-md">
+                                <h2 className="text-2xl font-semibold text-blue-700">{article.title}</h2>
+                                <p className="text-gray-700 mt-3 leading-relaxed line-clamp-3">{article.content}</p>
+                                <div className="mt-4">
+                                    <span className="text-sm text-gray-500">Categories: {article.categories.join(', ')}</span>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
         </div>
-
     );
 }

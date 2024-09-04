@@ -1,7 +1,7 @@
 // frontend\src\pages\LoginPage.jsx
 
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link for navigation
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/useAuth';
 
@@ -12,6 +12,7 @@ const LoginPage = () => {
     });
 
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false); // Loading state for activity indicator
     const navigate = useNavigate();
     const { login } = useAuth();
 
@@ -22,6 +23,7 @@ const LoginPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true); // Start loading
 
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, formData);
@@ -30,10 +32,12 @@ const LoginPage = () => {
             navigate('/'); // Redirect to dashboard or another page
         } catch (err) {
             if (err.response && err.response.data && err.response.data.error) {
-                setError(err.response.data.error); // Extract and set the error message from the response
+                setError(err.response.data.error);
             } else {
                 setError('Failed to log in. Please try again.');
             }
+        } finally {
+            setLoading(false); // Stop loading
         }
     };
 
@@ -64,8 +68,9 @@ const LoginPage = () => {
                     <button
                         type="submit"
                         className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        disabled={loading} // Disable button while loading
                     >
-                        Login
+                        {loading ? 'Logging in...' : 'Login'} {/* Show loading text */}
                     </button>
                 </form>
                 <div className="text-center mt-4">
