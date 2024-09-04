@@ -78,17 +78,21 @@ export default function HomePage() {
                 {filteredArticles.length === 0 ? (
                     <p className="text-gray-500 text-center">No articles found.</p>
                 ) : (
+
                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredArticles.map((article) => (
-                            <li key={article._id} className="p-6 bg-blue-50 hover:bg-blue-100 transition duration-200 ease-in-out rounded-lg shadow-md">
-                                <h2 className="text-2xl font-semibold text-blue-700">{article.title}</h2>
-                                <p className="text-gray-700 mt-3 leading-relaxed line-clamp-3">{article.content}</p>
-                                <div className="mt-4">
-                                    <span className="text-sm text-gray-500">Categories: {article.categories.join(', ')}</span>
+                            <li key={article._id} className="flex flex-col p-4 bg-blue-50 hover:bg-blue-100 transition duration-200 ease-in-out rounded-lg shadow-md h-60">
+                                <h2 className="text-xl font-semibold text-blue-700 mb-2">
+                                    <Link to={`/articles/${article._id}`}>{article.title}</Link>
+                                </h2>
+                                <p className="text-gray-700 flex-1 leading-relaxed line-clamp-3 mb-3">{article.content}</p>
+                                <div className="text-sm text-gray-500">
+                                    <span>Categories: {article.categories.join(', ')}</span>
                                 </div>
                             </li>
                         ))}
                     </ul>
+
                 )}
             </div>
         </div>

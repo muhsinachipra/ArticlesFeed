@@ -56,6 +56,26 @@ router.get('/homeArticles', authMiddleware, async (req, res) => {
 });
 
 
+// Get an article by ID
+router.get('/articles/:id', authMiddleware, async (req, res) => {
+    try {
+        const articleId = req.params.id;
+
+        // Find the article by ID
+        const article = await Article.findById(articleId);
+
+        if (!article) {
+            return res.status(404).json({ error: 'Article not found' });
+        }
+
+        res.status(200).json({ article });
+    } catch (error) {
+        console.error('Failed to fetch article:', error);
+        res.status(500).json({ error: 'Failed to fetch article' });
+    }
+});
+
+
 // Get User's Articles
 router.get('/articles', authMiddleware, async (req, res) => {
     try {

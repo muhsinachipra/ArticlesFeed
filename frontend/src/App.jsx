@@ -9,6 +9,7 @@ import DashboardPage from './pages/DashboardPage';
 import ErrorBoundary from './components/ErrorBoundary';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
+import ArticlePage from './pages/ArticlePage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
             <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+            <Route path="/articles/:id" element={<PrivateRoute><ArticlePage /></PrivateRoute>} />
             <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
           </Routes>
